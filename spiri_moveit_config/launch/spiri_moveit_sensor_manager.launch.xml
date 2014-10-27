@@ -1,5 +1,5 @@
 <launch>
-<!--rosparam command="load" file="$(find spiri_moveit_config)/config/tof.yaml" /-->
+<rosparam command="load" file="$(find spiri_moveit_config)/config/tof.yaml" />
 <param name="octomap_frame" type="string" value="nav" />
 <param name="octomap_resolution" type="double" value="0.05" />
 <param name="max_range" type="double" value="5.0" />
