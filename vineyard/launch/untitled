@@ -1,0 +1,9 @@
+<launch>
+    <node name="mapstitch" type="mapstitch" pkg="vineyard" output="screen" />
+        <param name="image_topic" value="downward_cam/camera/image_rect_color" tpye="string" />
+        <param name="map_topic" value="/map" tpye="string" />
+        <param name="min_matches" value="12" tpye="int" />
+        <param name="match_distance_factor" value="2.0" tpye="float" />
+        <param name="surf_min_hessian" value="400" tpye="int" />
+    </node>
+</launch>
