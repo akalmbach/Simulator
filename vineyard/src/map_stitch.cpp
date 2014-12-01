@@ -290,11 +290,11 @@ void MapStitchNode::stitchMap(const Mat& new_image, const Mat& map_in, Mat& map_
     // DEBUG CODE BELOW HERE    
     imshow("projection", projection);
     
-    Mat match_image;
-    ROS_INFO("%d %d %d", static_cast<int>(final_keypoints_map.size()), static_cast<int>(final_keypoints_new_image.size()), static_cast<int>(good_matches.size()));
+    //Mat match_image;
+    //ROS_INFO("%d %d %d", static_cast<int>(final_keypoints_map.size()), static_cast<int>(final_keypoints_new_image.size()), static_cast<int>(good_matches.size()));
     
-    drawMatches(map_in, final_keypoints_map, new_image, final_keypoints_new_image, good_matches, match_image);
-    imshow("matches", match_image);
+    //drawMatches(map_in, final_keypoints_map, new_image, final_keypoints_new_image, good_matches, match_image);
+    //imshow("matches", match_image);
     
     Mat map_dbg = map_out.clone();
     rectangle(map_dbg, next_roi, Scalar(255, 0, 0));
@@ -445,7 +445,7 @@ bool MapStitchNode::linkFacingUp(std::string frame)
     
     double roll, pitch, yaw;
     tf::Matrix3x3(camera_pose.getRotation()).getRPY(roll, pitch, yaw);
-    if (sqrt(roll*roll + pitch*pitch) < 0.01){
+    if (sqrt(roll*roll + pitch*pitch) < 0.005){
         return true;
     }
     else{

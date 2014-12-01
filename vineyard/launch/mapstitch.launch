@@ -8,6 +8,8 @@
     </node>
     
     <group ns="/downward_cam/camera">
-        <node name="image_proc" type="image_proc" pkg="image_proc" />
+        <node name="image_proc" type="image_proc" pkg="image_proc">
+	    <remap from="image_raw" to="image" />
+        </node>
     </group>
 </launch>
