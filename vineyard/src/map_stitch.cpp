@@ -220,8 +220,8 @@ void MapStitchNode::stitchMap(const Mat& new_image, const Mat& map_in, Mat& map_
     
     // This makes sure we don't accept any obviously wrong projections. Could probably improve performance
     // by being stricter here
-    if (projection_bounds.width > 2.0*map_roi.width || 2.0*projection_bounds.width < map_roi.width ||
-        projection_bounds.height > 2.0*map_roi.height || 2.0*projection_bounds.height < map_roi.height)
+    if (projection_bounds.width > 2.0*map_roi.width || projection_bounds.height > 2.0*map_roi.height ||
+        projection_bounds.width > 2.0*projection_bounds.height || projection_bounds.height > 2.0*projection_bounds.width)
     {
         ROS_INFO("Got a suspicious transformation, aborting");
         map_out = map_in;
@@ -342,13 +342,13 @@ void MapStitchNode::layeredCopy(const Mat& top_image, const Rect& top_image_boun
     // the top image has and the more weight the bottom image has
     Mat top_blend_mask = Mat::zeros(image_out_size, CV_32F);
     Mat bottom_blend_mask = Mat::zeros(image_out_size, CV_32F);
-    int N = 6;
+    int N = 12;
     float weight = 1.0/((float) (N-1));
     for (int i = 1; i < N; i++)
     {
         Mat top_blend_mask_tmp;
         // Set overall blending width by a ratio of the size of the top image
-        int erode_width = ( i*max(image_out_size.width, image_out_size.height) )/( 20.0*(N-1) );
+        int erode_width = ( i*max(image_out_size.width, image_out_size.height) )/( 40.0*(N-1) );
         erode(top_mask, top_blend_mask_tmp, Mat(), Point(-1, -1), erode_width, BORDER_CONSTANT, 0);
         addWeighted(top_blend_mask, 1.0, top_blend_mask_tmp, weight, 0, top_blend_mask);
     }
@@ -445,7 +445,7 @@ bool MapStitchNode::linkFacingUp(std::string frame)
     
     double roll, pitch, yaw;
     tf::Matrix3x3(camera_pose.getRotation()).getRPY(roll, pitch, yaw);
-    if (sqrt(roll*roll + pitch*pitch) < 0.005){
+    if (sqrt(roll*roll + pitch*pitch) < 0.001){
         return true;
     }
     else{
