@@ -53,7 +53,7 @@ class MapStitchNode
         void stitchMap(const Mat& new_image, const Mat& map_in, Mat& map_out, Rect& map_roi, Rect& next_roi);
         void getProjectedImageBounds(const Mat& image, const Mat& H, Rect& projected);
       
-        void layeredCopy(const Mat& top_image, const Rect& top_image_bounds,
+        void blendImages(const Mat& top_image, const Rect& top_image_bounds,
                           const Mat& bottom_image, const Rect& bottom_image_bounds,
                           Mat& image_out, const Size& image_out_size);
         
@@ -71,9 +71,9 @@ MapStitchNode::MapStitchNode(void) : it_(nh_)
 {
     nh_.param<std::string>("image_topic", image_topic_name_, "/downward_cam/camera/image_rect_color");
     nh_.param<std::string>("map_topic", map_topic_name_, "map");
-    nh_.param<int>("min_matches", min_matches_, 12);
+    nh_.param<int>("min_matches", min_matches_, 6);
     nh_.param<double>("match_distance_factor", match_distance_factor_, 3.0);
-    nh_.param<int>("surf_min_hessian", surf_min_hessian_, 400);
+    nh_.param<int>("surf_min_hessian", surf_min_hessian_, 600);
     
     image_sub_  = it_.subscribe(image_topic_name_, 1, &MapStitchNode::imageCallback, this);
     map_pub_ = it_.advertise(map_topic_name_, 1);
@@ -216,7 +216,7 @@ void MapStitchNode::stitchMap(const Mat& new_image, const Mat& map_in, Mat& map_
     
     Rect projection_bounds;
     getProjectedImageBounds(new_image, H, projection_bounds);
-    //printRect(projection_bounds, "Corners projected to:");
+    printRect(projection_bounds, "Corners projected to:");
     
     // This makes sure we don't accept any obviously wrong projections. Could probably improve performance
     // by being stricter here
@@ -279,7 +279,7 @@ void MapStitchNode::stitchMap(const Mat& new_image, const Mat& map_in, Mat& map_
     warpPerspective(new_image, projection, H, Size(map_out_width, map_out_height) );
     
     // Layer the new image on top of the translated input map
-    layeredCopy(projection, Rect(0, 0, map_out_width, map_out_height),
+    blendImages(projection, Rect(0, 0, map_out_width, map_out_height),
                   map_in, map_translated_bounds,
                   map_out, Size(map_out_width, map_out_height)
                 );
@@ -293,8 +293,6 @@ void MapStitchNode::stitchMap(const Mat& new_image, const Mat& map_in, Mat& map_
     //Mat match_image;
     //ROS_INFO("%d %d %d", static_cast<int>(final_keypoints_map.size()), static_cast<int>(final_keypoints_new_image.size()), static_cast<int>(good_matches.size()));
     
-    //drawMatches(map_in, final_keypoints_map, new_image, final_keypoints_new_image, good_matches, match_image);
-    //imshow("matches", match_image);
     
     Mat map_dbg = map_out.clone();
     rectangle(map_dbg, next_roi, Scalar(255, 0, 0));
@@ -302,7 +300,7 @@ void MapStitchNode::stitchMap(const Mat& new_image, const Mat& map_in, Mat& map_
     waitKey(5);
 }
 
-void MapStitchNode::layeredCopy(const Mat& top_image, const Rect& top_image_bounds,
+void MapStitchNode::blendImages(const Mat& top_image, const Rect& top_image_bounds,
               const Mat& bottom_image, const Rect& bottom_image_bounds,
               Mat& image_out, const Size& image_out_size)
 {
@@ -445,7 +443,7 @@ bool MapStitchNode::linkFacingUp(std::string frame)
     
     double roll, pitch, yaw;
     tf::Matrix3x3(camera_pose.getRotation()).getRPY(roll, pitch, yaw);
-    if (sqrt(roll*roll + pitch*pitch) < 0.001){
+    if (sqrt(roll*roll + pitch*pitch) < 0.01){
         return true;
     }
     else{
@@ -478,11 +476,16 @@ void MapStitchNode::imageCallback(const sensor_msgs::ImageConstPtr& msg)
             new_map = new_image;
         }
         else
-        {
+        {            
             stitchMap(new_image, current_map_, new_map, current_roi_, next_roi);
         }
             
         current_map_ = new_map;
+        
+        // Instead of updating current_roi_ with the output from stitchMap, we might want to set the ROI
+        // by projecting the corners through the downward camera into the world frame, then applying the transform
+        // between the static camera and the downward camera, and back-projecting into the static-camera. You
+        // could apply the covariance of the state estimate for a more conservative ROI bound
         current_roi_ = next_roi;
         
         sensor_msgs::ImagePtr map_msg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", current_map_).toImageMsg();
