@@ -1,6 +1,4 @@
 #include <spiri_api/staterobot.h>
-
-
 #include <iostream>
 #include <boost/python.hpp>
 using namespace boost::python;
@@ -21,7 +19,11 @@ BOOST_PYTHON_MODULE(libspiri_api_python)
 	     .def("send_goal_relative",&Staterobot::send_goal_python_relative)
             .def("send_vel",&Staterobot::send_vel_python)
             .def("wait_goal",&Staterobot::wait_goal)
+
+	    .def("stop_traj",&Staterobot::stop_traj)
+
             .def("land", &Staterobot::land)
             .def("takeoff", &Staterobot::takeoff)
+
     ;
 }

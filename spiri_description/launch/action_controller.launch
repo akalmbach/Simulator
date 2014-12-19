@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<launch>
+  <node name="multi_dof_joint_trajectory_action" pkg="action_controller" type="action_controller_node" output="screen"/>
+  <!--node name="spiri_controller" pkg="action_controller" type="spiri_ros_controller.py" output="screen"/-->
+  <node name="spiri_motion_primitives" pkg="spiri_motion_primitives" type="spiri_motion_primitives_server"/>
+  <node name="spiri_ros_controller" pkg="action_controller" type="spiri_ros_controller_node"/>
+</launch>

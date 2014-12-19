@@ -136,8 +136,12 @@ public:
     bool send_goal_python(boost::python::list &);
     bool send_goal_python_relative(boost::python::list &);
     void send_vel_python(boost::python::list &);
+
+    void stop_traj();
+    
     void land();
     void takeoff();
+
 
 
 

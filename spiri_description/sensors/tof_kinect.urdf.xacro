@@ -70,13 +70,13 @@
       
       <gazebo reference="${name}_depth_frame">
         <sensor type="depth" name="${name}">
-          <update_rate>30</update_rate>
+          <update_rate>7</update_rate>
           <camera>
             <horizontal_fov>1.407</horizontal_fov>
             <image>
               <format>R8G8B8</format>
-              <width>640</width>
-              <height>480</height>
+              <width>320</width>
+              <height>240</height>
             </image>
             <clip>
               <near>1.0</near>
@@ -87,7 +87,7 @@
           <plugin name="${name}_camera_controller" filename="libgazebo_ros_openni_kinect.so">
 	<baseline>0.2</baseline>            
 	<alwaysOn>true</alwaysOn>
-            <updateRate>20</updateRate>
+            <updateRate>7</updateRate>
             <imageTopicName>${name}/rgb/image_raw</imageTopicName>
             <cameraInfoTopicName>${name}/rgb/camera_info</cameraInfoTopicName>
             <depthImageTopicName>${name}/depth/image_raw</depthImageTopicName>

@@ -11,22 +11,29 @@
     <!--SUBGROUPS: Groups can also be formed by referencing to already defined group names-->
     <group name="spiri">
         <joint name="virtual_join" />
+        <joint name="base_imu_joint" />
+        <joint name="base_mag_joint" />
+        <joint name="base_range_joint" />
         <joint name="downward_cam_joint" />
         <joint name="downward_cam_optical_joint" />
-        <joint name="stereo/left_joint" />
-        <joint name="stereo/left_optical_joint" />
-        <joint name="stereo/right_joint" />
-        <joint name="stereo/right_optical_joint" />
+        <joint name="stereo_pointcloud_joint" />
+        <joint name="stereo_joint" />
+        <joint name="stereo_left_joint" />
+        <joint name="stereo_right_joint" />
         
     </group>
     <!--VIRTUAL JOINT: Purpose: this element defines a virtual joint between a robot link and an external frame of reference (considered fixed with respect to the robot)-->
     <virtual_joint name="virtual_join" type="floating" parent_frame="nav" child_link="base_link" />
     <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
     <disable_collisions link1="base_link" link2="downward_cam_link" reason="Adjacent" />
-    <disable_collisions link1="base_link" link2="stereo/left_link" reason="Adjacent" />
-    <disable_collisions link1="base_link" link2="stereo/right_link" reason="Adjacent" />
-    
-    <disable_collisions link1="downward_cam_link" link2="stereo/left_link" reason="Never" />
-    <disable_collisions link1="downward_cam_link" link2="stereo/right_link" reason="Never" />
+    <disable_collisions link1="base_link" link2="stereo_left_optical_frame" reason="Default" />
+    <disable_collisions link1="base_link" link2="stereo_link" reason="Adjacent" />
+    <disable_collisions link1="base_link" link2="stereo_right_optical_frame" reason="Default" />
+    <disable_collisions link1="downward_cam_link" link2="stereo_left_optical_frame" reason="Never" />
+    <disable_collisions link1="downward_cam_link" link2="stereo_link" reason="Never" />
+    <disable_collisions link1="downward_cam_link" link2="stereo_right_optical_frame" reason="Never" />
+    <disable_collisions link1="stereo_left_optical_frame" link2="stereo_link" reason="Adjacent" />
+    <disable_collisions link1="stereo_left_optical_frame" link2="stereo_right_optical_frame" reason="Never" />
+    <disable_collisions link1="stereo_link" link2="stereo_right_optical_frame" reason="Adjacent" />
     
 </robot>

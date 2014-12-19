@@ -16,7 +16,7 @@
   </include>
 
   <include file="$(find spiri_description)/launch/description.launch" >
-  <arg name="use_ground_truth_for_tf" value="True"/>
+  <arg name="use_ground_truth_for_tf" value="true"/>
   <arg name="use_ground_truth_for_control" value="true" />
   </include>
 </launch>
