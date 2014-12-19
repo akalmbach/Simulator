@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
 ## @package spiri_api
-# API for Spiri
-# @author Rohan Bhargava
-# @version 1.1.2
+# Python API for Spiri
+# @author Rohan Bhargava and Arnold Kalmbach
+# @version 1.1.3
 
 
 
@@ -32,7 +32,7 @@ class State:
   orientation=imu()
 
   
-## Class defining all the functions to control spiri in PYthon
+## Class defining all the functions to control spiri in Python
 class spiri_api_python():
   ## Constuctor
   def __init__(self):
@@ -135,10 +135,16 @@ class spiri_api_python():
   def wait_goal(self):
     return self.spiri.wait_goal()
 
+  
+  def stop_traj(self):
+    return self.spiri.stop_traj()
+
+
   def takeoff(self):
     return self.spiri.takeoff()
 
   def land(self):
     return self.spiri.land()
+
     
  

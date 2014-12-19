@@ -1,11 +1,14 @@
 <?xml version="1.0"?>
 <launch>
 
-
-  <include file="$(find spiri_description)/launch/spiri_empty_world.launch" />
-  
+  <include file="$(find spiri_description)/launch/action_controller.launch" />
+  <!--include file="$(find spiri_description)/launch/stereo_image_proc.launch" /-->
+  <include file="$(find spiri_description)/launch/obstacle_world.launch" />
+  <!--include file="$(find spiri_description)/launch/spiri_empty_world.launch" /-->
   <include file="$(find spiri_moveit_config)/launch/moveit_planning_execution.launch">
   <arg name="viz" value="false"/>
+  
+  
   </include> 
   
 </launch>
